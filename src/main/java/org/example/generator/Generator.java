@@ -143,15 +143,11 @@ public class Generator {
 
         if (Set.class.isAssignableFrom(raw)) {
             coll = new HashSet<>();
-        }
-        else if (List.class.isAssignableFrom(raw) || Collection.class.isAssignableFrom(raw)) {
-            coll = new ArrayList<>();
-        }
-        else {
+        } else {
             coll = new ArrayList<>();
         }
 
-        Class<?> elemClass = String.class;
+        Class<?> elemClass = Object.class;
 
         if (gType instanceof ParameterizedType pt) {
             Type t = pt.getActualTypeArguments()[0];
