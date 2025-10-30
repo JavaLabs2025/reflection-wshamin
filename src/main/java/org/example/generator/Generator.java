@@ -2,7 +2,6 @@ package org.example.generator;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.*;
 import java.net.JarURLConnection;
 import java.net.URL;
@@ -27,8 +26,8 @@ public class Generator {
 
         if (depth > MAX_DEPTH) return defaultFor(type);
 
-        if (type.isPrimitive()) return randomPrimitive(type);
-        if (isWrapper(type)) return randomWrapper(type);
+        if (type.isPrimitive()) return randomPrimitiveOrWrapper(type);
+        if (isWrapper(type)) return randomPrimitiveOrWrapper(type);
         if (type == String.class) return randomString();
         if (type.isEnum()) return randomEnum(type);
         if (type.isArray()) return randomArray(type.getComponentType(), depth);
@@ -85,28 +84,16 @@ public class Generator {
         return defaultFor(type);
     }
 
-    private Object randomPrimitive(Class<?> p) {
-        if (p == boolean.class) return rnd.nextBoolean();
-        if (p == byte.class) return (byte) rnd.nextInt();
-        if (p == short.class) return (short) rnd.nextInt();
-        if (p == char.class) return (char) ('a' + rnd.nextInt(26));
-        if (p == int.class) return rnd.nextInt();
-        if (p == long.class) return rnd.nextLong();
-        if (p == float.class) return rnd.nextFloat();
-        if (p == double.class) return rnd.nextDouble();
+    private Object randomPrimitiveOrWrapper(Class<?> p) {
+        if (p == boolean.class || p == Boolean.class) return rnd.nextBoolean();
+        if (p == byte.class || p == Byte.class) return (byte) rnd.nextInt();
+        if (p == short.class || p == Short.class) return (short) rnd.nextInt();
+        if (p == char.class || p == Character.class) return (char) ('a' + rnd.nextInt(26));
+        if (p == int.class || p == Integer.class) return rnd.nextInt();
+        if (p == long.class || p == Long.class) return rnd.nextLong();
+        if (p == float.class || p == Float.class) return rnd.nextFloat();
+        if (p == double.class || p == Double.class) return rnd.nextDouble();
         throw new IllegalArgumentException("Неизвестный примитив: " + p);
-    }
-
-    private Object randomWrapper(Class<?> w) {
-        if (w == Boolean.class) return rnd.nextBoolean();
-        if (w == Byte.class) return (byte) rnd.nextInt();
-        if (w == Short.class) return (short) rnd.nextInt();
-        if (w == Character.class) return (char) ('a' + rnd.nextInt(26));
-        if (w == Integer.class) return rnd.nextInt();
-        if (w == Long.class) return rnd.nextLong();
-        if (w == Float.class) return rnd.nextFloat();
-        if (w == Double.class) return rnd.nextDouble();
-        throw new IllegalArgumentException("Неизвестная обёртка: " + w);
     }
 
     private Object randomEnum(Class<?> e) {
